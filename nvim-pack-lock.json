@@ -8,6 +8,14 @@
       "rev": "6bd29494e3f79ff08be1d35bc1926ed23c22ed9a",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "mini.icons": {
+      "rev": "efc85e42262cd0c9e1fdbf806c25cb0be6de115c",
+      "src": "https://github.com/nvim-mini/mini.icons.git"
+    },
+    "mini.pick": {
+      "rev": "aa242acc17683515d8f749552aebe061bced9132",
+      "src": "https://github.com/nvim-mini/mini.pick"
+    },
     "nvim-lint": {
       "rev": "1f19dacd945a7b1a57f29f32b2d7168384df3d36",
       "src": "https://github.com/mfussenegger/nvim-lint"
