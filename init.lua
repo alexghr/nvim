@@ -76,10 +76,10 @@ require('oil').setup({
   },
 })
 
-require('lua.lsp_config')
-require('lua.lint_config')
-require('lua.conform_config')
-require('lua.term_toggle')
+require('lsp_config')
+require('lint_config')
+require('conform_config')
+require('term_toggle')
 
 vim.keymap.set('n', '<leader>`', ':lua TermToggle(20)<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader><ESC>', ':lua TermToggle(20)<CR>', { noremap = true, silent = true })
