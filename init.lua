@@ -6,6 +6,8 @@ vim.pack.add {
   { src = 'https://github.com/folke/tokyonight.nvim' },
   { src = 'https://github.com/nvim-mini/mini.pick' },
   { src = 'https://github.com/nvim-mini/mini.icons.git' },
+  { src = 'https://github.com/mfussenegger/nvim-lint.git' },
+  { src = 'https://github.com/stevearc/conform.nvim.git' }
 }
 
 vim.cmd([[colorscheme tokyonight]])
@@ -75,6 +77,8 @@ require('oil').setup({
 })
 
 require('lua.lsp_config')
+require('lua.lint_config')
+require('lua.conform_config')
 require('lua.term_toggle')
 
 vim.keymap.set('n', '<leader>`', ':lua TermToggle(20)<CR>', { noremap = true, silent = true })
