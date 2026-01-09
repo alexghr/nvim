@@ -64,6 +64,15 @@ MiniPick.setup({
   }
 })
 
+function StartMiniPick(name, items)
+  MiniPick.start({
+    source = {
+      name = name,
+      items = items
+    }
+  })
+end
+
 require('oil').setup({
   default_file_explorer = true,
   columns = {
@@ -92,7 +101,7 @@ vim.keymap.set('n', '<leader>sf', MiniPick.builtin.files, { desc = '[S]earch [F]
 vim.keymap.set('n', '<leader>sg', MiniPick.builtin.grep_live, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sr', MiniPick.builtin.resume, { desc = '[S]earch [R]esume' })
 vim.keymap.set('n', '<leader>q',
-  function() MiniPick.start({ source = { name = 'Diagnostics', items = vim.diagnostic.toqflist(vim.diagnostic.get()) } }) end,
+  function() StartMiniPick('Diagnostics', vim.diagnostic.toqflist(vim.diagnostic.get())) end,
   { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('n', '<leader><leader>', MiniPick.builtin.buffers, { desc = '[ ] Find existing buffers' })
 
@@ -110,6 +119,64 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 vim.keymap.set('i', '<C-space>', '<C-x><C-o>', { desc = 'Autocomplete' })
+
+-- Taken from telescope - https://github.com/tris203/telescope.nvim/blob/d5059ecf874e54e317c2e8bab8591c82612861c3/lua/telescope/builtin/__lsp.lua#L106-L128
+---@param item vim.quickfix.entry
+---@return lsp.Location
+local function item_to_location(item)
+  local line = item.lnum - 1
+  local character = item.col
+  local uri = vim.uri_from_fname(item.filename)
+  return {
+    uri = uri,
+    range = {
+      start = {
+        line = line,
+        character = character,
+      },
+      ["end"] = {
+        line = line,
+        character = character,
+      },
+    },
+  }
+end
+
+---@param item vim.quickfix.entry
+local function choose(item)
+  local loc = item_to_location(item)
+  local clients = vim.lsp.get_clients({ bufnr = item.bufnr })
+  if #clients > 0 then
+    vim.lsp.util.show_document(loc, clients[1].offset_encoding, { focus = true, reuse_win = true })
+  end
+end
+
+---@param opts vim.lsp.LocationOpts.OnList
+local function on_list(opts)
+  -- if there's only one item, select it
+  if #opts.items == 1 then
+    choose(opts.items[1])
+  else
+    MiniPick.start({
+      source = {
+        name = opts.title,
+        items = opts.items,
+        choose = choose
+      }
+    })
+  end
+end
+
+local function lsp_fn(fn)
+  return function() fn({ on_list = on_list }) end
+end
+
+vim.keymap.set('n', 'gd', lsp_fn(vim.lsp.buf.definition), { desc = '[G]o to [d]efinition' })
+vim.keymap.set('n', 'gD', lsp_fn(vim.lsp.buf.type_definition), { desc = '[G]o to type [d]efinition' })
+vim.keymap.set('n', 'gi', lsp_fn(vim.lsp.buf.implementation), { desc = '[G]o to [i]implementation' })
+vim.keymap.set('n', 'gr', lsp_fn(function(cfg) vim.lsp.buf.references(nil, cfg) end), { desc = '[G]o to [r]eferences' })
+vim.keymap.set('n', '<leader>ds', lsp_fn(vim.lsp.buf.document_symbol), { desc = '[D]ocument [s]ymbols' })
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = '[R]e[n]ame' })
 
 -- Enable LSP complete
 vim.api.nvim_create_autocmd('LspAttach', {
