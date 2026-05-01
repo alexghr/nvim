@@ -36,6 +36,8 @@ local servers = {
 
   ols = {},
   rust_analyzer = {},
+  clangd = {},
+  gopls = {}
 }
 
 for server, config in pairs(servers) do
