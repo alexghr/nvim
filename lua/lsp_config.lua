@@ -37,9 +37,7 @@ local servers = {
   ols = {},
   rust_analyzer = {},
   clangd = {},
-  gopls = {
-    usePlaceholders = true,
-  },
+  gopls = {},
   tsgo = {}
 }
 

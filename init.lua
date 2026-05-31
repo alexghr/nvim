@@ -1,16 +1,17 @@
 vim.pack.add {
-  { src = 'https://github.com/neovim/nvim-lspconfig' },
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
-  { src = 'https://github.com/stevearc/oil.nvim' },
-  { src = 'https://github.com/tpope/vim-fugitive' },
-  { src = 'https://github.com/folke/tokyonight.nvim' },
-  { src = 'https://github.com/nvim-mini/mini.pick' },
-  { src = 'https://github.com/nvim-mini/mini.icons.git' },
-  { src = 'https://github.com/mfussenegger/nvim-lint.git' },
-  { src = 'https://github.com/stevearc/conform.nvim.git' }
+  { src = 'https://github.com/neovim/nvim-lspconfig',      version = 'v2.9.0' },
+  { src = 'https://github.com/stevearc/oil.nvim',          version = 'v2.16.0' },
+  { src = 'https://github.com/tpope/vim-fugitive',         version = '3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0' },
+  { src = 'https://github.com/ibhagwan/fzf-lua',           version = 'e3a71496027f2e3c4a60340170c04d66053d5c4c' },
+  { src = 'https://github.com/loctvl842/monokai-pro.nvim', version = 'v2.1.4' },
+  { src = 'https://github.com/nvim-mini/mini.icons',       version = '520995f1d75da0e4cc901ee95080b1ff2bc46b94' },
+  { src = 'https://github.com/lewis6991/gitsigns.nvim',    version = 'v2.1.0' }
 }
 
-vim.cmd([[colorscheme tokyonight]])
+require('monokai-pro').setup({
+  filter = "machine",
+})
+vim.cmd([[colorscheme monokai-pro]])
 
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -54,27 +55,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
-require('mini.icons').setup()
-
-local MiniPick = require('mini.pick')
-MiniPick.setup({
-  mappings = {
-    execute = {
-      char = '<C-e>',
-      func = function() vim.cmd(vim.fn.input('Execute: ')) end,
-    }
-  }
-})
-
-function StartMiniPick(name, items)
-  MiniPick.start({
-    source = {
-      name = name,
-      items = items
-    }
-  })
-end
-
 require('oil').setup({
   default_file_explorer = true,
   columns = {
@@ -87,99 +67,44 @@ require('oil').setup({
   },
 })
 
-require('lsp_config')
-require('lint_config')
-require('conform_config')
-require('term_toggle')
+local fzf = require('fzf-lua')
+fzf.setup({
+  fzf_colors = true
+})
+fzf.register_ui_select()
 
-vim.keymap.set('n', '<leader>`', ':lua TermToggle(20)<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader><ESC>', ':lua TermToggle(20)<CR>', { noremap = true, silent = true })
-vim.keymap.set('t', '<leader>`', '<C-\\><C-n>:lua TermToggle(20)<CR>', { noremap = true, silent = true })
-vim.keymap.set('t', '<leader><ESC>', '<C-\\><C-n>:lua TermToggle(20)<CR>', { noremap = true, silent = true })
+require('mini.icons').setup({})
+require('gitsigns').setup({})
+require('lsp_config')
 
 vim.keymap.set('n', '-', ':Oil<CR>', { desc = 'Open parent directory' })
-
-vim.keymap.set('n', '<leader>sf', MiniPick.builtin.files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sg', MiniPick.builtin.grep_live, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sr', MiniPick.builtin.resume, { desc = '[S]earch [R]esume' })
-vim.keymap.set('n', '<leader>q',
-  function() StartMiniPick('Diagnostics', vim.diagnostic.toqflist(vim.diagnostic.get(0))) end,
-  { desc = 'Open diagnostic [Q]uickfix list' })
-vim.keymap.set('n', '<leader><leader>', MiniPick.builtin.buffers, { desc = '[ ] Find existing buffers' })
 
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, { desc = '[F]ormat buffer' })
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
-vim.keymap.set('n', '<leader>ec', '<CMD>e $MYVIMRC<CR>', { desc = '[E]dit [c]onfig' })
-vim.keymap.set('n', '<leader>r', ':source $MYVIMRC<CR>', { desc = '[R]eload config' })
-
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('i', '<C-space>', function()
-  vim.lsp.completion.get()
-end, { desc = 'Autocomplete' })
+vim.keymap.set('i', '<C-space>', vim.lsp.completion.get, { desc = 'Autocomplete' })
 
--- Taken from telescope - https://github.com/tris203/telescope.nvim/blob/d5059ecf874e54e317c2e8bab8591c82612861c3/lua/telescope/builtin/__lsp.lua#L106-L128
----@param item vim.quickfix.entry
----@return lsp.Location
-local function item_to_location(item)
-  local line = item.lnum - 1
-  local character = item.col
-  local uri = vim.uri_from_fname(item.filename)
-  return {
-    uri = uri,
-    range = {
-      start = {
-        line = line,
-        character = character,
-      },
-      ["end"] = {
-        line = line,
-        character = character,
-      },
-    },
-  }
-end
+vim.keymap.set('n', '<leader>sf', fzf.files, { desc = '[S]earch [f]iles' })
+vim.keymap.set('n', '<leader>sv', fzf.vcs_files, { desc = '[S]earch [v]cs files' })
+vim.keymap.set('n', '<leader>sg', fzf.live_grep_native, { desc = '[S]earch [g]rep' })
+vim.keymap.set('n', '<leader>r', fzf.resume, { desc = '[R]esume' })
+vim.keymap.set('n', '<leader><leader>', fzf.history, { desc = 'Open history' })
 
----@param item vim.quickfix.entry
-local function choose(item)
-  local loc = item_to_location(item)
-  local clients = vim.lsp.get_clients({ bufnr = item.bufnr })
-  if #clients > 0 then
-    vim.lsp.util.show_document(loc, clients[1].offset_encoding, { focus = true, reuse_win = true })
-  end
-end
+vim.keymap.set('n', 'gd', fzf.lsp_definitions, { desc = '[G]o to [d]efinition' })
+vim.keymap.set('n', 'gD', fzf.lsp_typedefs, { desc = '[G]o to type [d]efinition' })
+vim.keymap.set('n', 'gi', fzf.lsp_implementations, { desc = '[G]o to [i]implementation' })
+vim.keymap.set('n', 'gr', fzf.lsp_references, { desc = '[G]o to [r]eferences' })
 
----@param opts vim.lsp.LocationOpts.OnList
-local function on_list(opts)
-  -- if there's only one item, select it
-  if #opts.items == 1 then
-    choose(opts.items[1])
-  else
-    MiniPick.start({
-      source = {
-        name = opts.title,
-        items = opts.items,
-        choose = choose
-      }
-    })
-  end
-end
-
-local function lsp_fn(fn)
-  return function() fn({ on_list = on_list }) end
-end
-
-vim.keymap.set('n', 'gd', lsp_fn(vim.lsp.buf.definition), { desc = '[G]o to [d]efinition' })
-vim.keymap.set('n', 'gD', lsp_fn(vim.lsp.buf.type_definition), { desc = '[G]o to type [d]efinition' })
-vim.keymap.set('n', 'gi', lsp_fn(vim.lsp.buf.implementation), { desc = '[G]o to [i]implementation' })
-vim.keymap.set('n', 'gr', lsp_fn(function(cfg) vim.lsp.buf.references(nil, cfg) end), { desc = '[G]o to [r]eferences' })
-vim.keymap.set('n', '<leader>ds', lsp_fn(vim.lsp.buf.document_symbol), { desc = '[D]ocument [s]ymbols' })
+vim.keymap.set('n', '<leader>q', fzf.lsp_document_diagnostics, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>ds', fzf.lsp_document_symbols, { desc = '[D]ocument [s]ymbols' })
+vim.keymap.set('n', '<leader>ws', fzf.lsp_workspace_symbols, { desc = '[W]orkspace [s]ymbols' })
 vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = '[R]e[n]ame' })
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = '[C]ode [A]ction' })
 vim.keymap.set('n', '<leader>oi', function()
@@ -199,7 +124,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end
 })
 
-local Snippets = require('snippets')
+local Snippets = require('snippets_config')
 vim.keymap.set('n', '<leader>sn', Snippets.pick_snippet, { desc = '[S]nippets' })
 vim.keymap.set('i', '<C-e>', Snippets.expand_leading_snippet, { desc = '[S]nippets' })
-
