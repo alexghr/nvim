@@ -101,7 +101,7 @@ vim.keymap.set('n', '<leader>sf', MiniPick.builtin.files, { desc = '[S]earch [F]
 vim.keymap.set('n', '<leader>sg', MiniPick.builtin.grep_live, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sr', MiniPick.builtin.resume, { desc = '[S]earch [R]esume' })
 vim.keymap.set('n', '<leader>q',
-  function() StartMiniPick('Diagnostics', vim.diagnostic.toqflist(vim.diagnostic.get())) end,
+  function() StartMiniPick('Diagnostics', vim.diagnostic.toqflist(vim.diagnostic.get(0))) end,
   { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('n', '<leader><leader>', MiniPick.builtin.buffers, { desc = '[ ] Find existing buffers' })
 
@@ -118,7 +118,9 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
-vim.keymap.set('i', '<C-space>', '<C-x><C-o>', { desc = 'Autocomplete' })
+vim.keymap.set('i', '<C-space>', function()
+  vim.lsp.completion.get()
+end, { desc = 'Autocomplete' })
 
 -- Taken from telescope - https://github.com/tris203/telescope.nvim/blob/d5059ecf874e54e317c2e8bab8591c82612861c3/lua/telescope/builtin/__lsp.lua#L106-L128
 ---@param item vim.quickfix.entry
