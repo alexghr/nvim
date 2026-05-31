@@ -45,6 +45,8 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.inccommand = 'split'
 
+vim.cmd([[ set completeopt+=noselect ]])
+
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   callback = function()
@@ -179,6 +181,13 @@ vim.keymap.set('n', 'gi', lsp_fn(vim.lsp.buf.implementation), { desc = '[G]o to 
 vim.keymap.set('n', 'gr', lsp_fn(function(cfg) vim.lsp.buf.references(nil, cfg) end), { desc = '[G]o to [r]eferences' })
 vim.keymap.set('n', '<leader>ds', lsp_fn(vim.lsp.buf.document_symbol), { desc = '[D]ocument [s]ymbols' })
 vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = '[R]e[n]ame' })
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = '[C]ode [A]ction' })
+vim.keymap.set('n', '<leader>oi', function()
+  vim.lsp.buf.code_action({
+    context = { only = { 'source.organizeImports' } },
+    apply = true,
+  })
+end, { desc = '[O]rganize [I]mports' })
 
 -- Enable LSP complete
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -190,4 +199,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end
 })
 
-vim.cmd([[ set completeopt+=noselect ]])
+local Snippets = require('snippets')
+vim.keymap.set('n', '<leader>sn', Snippets.pick_snippet, { desc = '[S]nippets' })
+vim.keymap.set('i', '<C-e>', Snippets.expand_leading_snippet, { desc = '[S]nippets' })
+
