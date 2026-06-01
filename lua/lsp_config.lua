@@ -34,6 +34,19 @@ local servers = {
     }
   },
 
+  helm_ls = {},
+  yamlls = {
+    settings = {
+      redhat = { telemetry = { enabled = false } },
+      yaml = {
+        format = { enable = true },
+      },
+    },
+    on_init = function(client)
+      client.server_capabilities.documentFormattingProvider = true
+    end,
+  },
+
   ols = {},
   rust_analyzer = {},
   clangd = {},
@@ -45,4 +58,3 @@ for server, config in pairs(servers) do
   vim.lsp.config(server, config)
   vim.lsp.enable(server)
 end
-

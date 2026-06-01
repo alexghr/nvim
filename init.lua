@@ -8,6 +8,29 @@ vim.pack.add {
   { src = 'https://github.com/lewis6991/gitsigns.nvim',    version = 'v2.1.0' }
 }
 
+-- clean up old packages that were removed from vim.pack.add
+local function pack_clean_inactive()
+  local inactive = {}
+
+  for _, plugin in ipairs(vim.pack.get(nil, { info = false })) do
+    if not plugin.active then
+      table.insert(inactive, plugin.spec.name)
+    end
+  end
+
+  if #inactive == 0 then
+    vim.notify('No inactive vim.pack packages to remove', vim.log.levels.INFO)
+    return
+  end
+
+  vim.pack.del(inactive)
+  vim.notify('Removed inactive vim.pack packages: ' .. table.concat(inactive, ', '), vim.log.levels.INFO)
+end
+
+vim.api.nvim_create_user_command('PackCleanInactive', pack_clean_inactive, {
+  desc = 'Remove vim.pack packages that are not active in this session',
+})
+
 require('monokai-pro').setup({
   filter = "machine",
 })
@@ -75,6 +98,7 @@ fzf.register_ui_select()
 
 require('mini.icons').setup({})
 require('gitsigns').setup({})
+require('filetype_config')
 require('lsp_config')
 
 vim.keymap.set('n', '-', ':Oil<CR>', { desc = 'Open parent directory' })
@@ -109,7 +133,7 @@ vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = '[R]e[n]ame' })
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = '[C]ode [A]ction' })
 vim.keymap.set('n', '<leader>oi', function()
   vim.lsp.buf.code_action({
-    context = { only = { 'source.organizeImports' } },
+    context = { only = { 'source.organizeImports' }, diagnostics = {} },
     apply = true,
   })
 end, { desc = '[O]rganize [I]mports' })
