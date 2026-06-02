@@ -114,6 +114,7 @@ vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower win
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
 vim.keymap.set('i', '<C-space>', vim.lsp.completion.get, { desc = 'Autocomplete' })
+vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, { desc = 'Show function signature' })
 
 vim.keymap.set('n', '<leader>sf', fzf.files, { desc = '[S]earch [f]iles' })
 vim.keymap.set('n', '<leader>sv', fzf.vcs_files, { desc = '[S]earch [v]cs files' })
