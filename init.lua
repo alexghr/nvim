@@ -152,3 +152,43 @@ vim.api.nvim_create_autocmd('LspAttach', {
 local Snippets = require('snippets_config')
 vim.keymap.set('n', '<leader>sn', Snippets.pick_snippet, { desc = '[S]nippets' })
 vim.keymap.set('i', '<C-e>', Snippets.expand_leading_snippet, { desc = '[S]nippets' })
+
+-- fugitive helpers
+
+---@param title string
+---@return integer|nil
+local function get_window_by_name(title)
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local name = vim.api.nvim_buf_get_name(buf)
+
+      if name:match(title) then
+        return win
+      end
+    end
+
+    return nil
+end
+
+local function toggle_fugitive()
+  local win = get_window_by_name("^fugitive://")
+  if win then
+    vim.api.nvim_set_current_win(win)
+    vim.cmd([[ normal gq ]])
+  else
+    vim.cmd([[ Git ]])
+  end
+end
+
+local function toggle_fugitive_blame()
+  local win = get_window_by_name(".fugitiveblame$")
+  if win then
+    vim.api.nvim_set_current_win(win)
+    vim.cmd([[ quit ]])
+  else
+    vim.cmd([[ Git blame ]])
+  end
+end
+
+vim.keymap.set('n', '<leader>gs', toggle_fugitive, { desc = '[G]it [s]status' })
+vim.keymap.set('n', '<leader>gb', toggle_fugitive_blame, { desc = '[G]it [b]lame' })
