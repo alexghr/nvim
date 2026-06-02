@@ -5,7 +5,8 @@ vim.pack.add {
   { src = 'https://github.com/ibhagwan/fzf-lua',           version = 'e3a71496027f2e3c4a60340170c04d66053d5c4c' },
   { src = 'https://github.com/loctvl842/monokai-pro.nvim', version = 'v2.1.4' },
   { src = 'https://github.com/nvim-mini/mini.icons',       version = '520995f1d75da0e4cc901ee95080b1ff2bc46b94' },
-  { src = 'https://github.com/lewis6991/gitsigns.nvim',    version = 'v2.1.0' }
+  { src = 'https://github.com/lewis6991/gitsigns.nvim',    version = 'v2.1.0' },
+  { src = 'https://github.com/folke/which-key.nvim',       version = '3aab2147e74890957785941f0c1ad87d0a44c15a' },
 }
 
 -- clean up old packages that were removed from vim.pack.add
@@ -98,6 +99,13 @@ fzf.register_ui_select()
 
 require('mini.icons').setup({})
 require('gitsigns').setup({})
+
+require('which-key').setup({
+  plugins = {
+    registers = true,
+  },
+})
+
 require('filetype_config')
 require('lsp_config')
 
@@ -159,15 +167,15 @@ vim.keymap.set('i', '<C-e>', Snippets.expand_leading_snippet, { desc = '[S]nippe
 ---@return integer|nil
 local function get_window_by_name(title)
   for _, win in ipairs(vim.api.nvim_list_wins()) do
-      local buf = vim.api.nvim_win_get_buf(win)
-      local name = vim.api.nvim_buf_get_name(buf)
+    local buf = vim.api.nvim_win_get_buf(win)
+    local name = vim.api.nvim_buf_get_name(buf)
 
-      if name:match(title) then
-        return win
-      end
+    if name:match(title) then
+      return win
     end
+  end
 
-    return nil
+  return nil
 end
 
 local function toggle_fugitive()
