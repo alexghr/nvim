@@ -69,7 +69,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.inccommand = 'split'
 
-vim.cmd([[ set completeopt+=noselect ]])
+vim.opt.completeopt = { 'menu', 'menuone', 'noselect', 'popup' }
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',

@@ -1,3 +1,75 @@
+local tsgo_capabilities = vim.lsp.protocol.make_client_capabilities()
+tsgo_capabilities.textDocument.completion.completionList.itemDefaults = {}
+
+local function add_tsgo_keyword_triggers(client)
+  local completion_provider = client.server_capabilities.completionProvider
+  if not completion_provider then
+    return
+  end
+
+  local triggers = completion_provider.triggerCharacters or {}
+  local seen = {}
+  for _, trigger in ipairs(triggers) do
+    seen[trigger] = true
+  end
+
+  for trigger in ('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_$'):gmatch('.') do
+    if not seen[trigger] then
+      table.insert(triggers, trigger)
+    end
+  end
+
+  completion_provider.triggerCharacters = triggers
+end
+
+local function patch_tsgo_completion_boundary()
+  if vim.g.tsgo_completion_boundary_patched then
+    return
+  end
+
+  local convert_results = vim.lsp.completion._convert_results
+  if not convert_results then
+    return
+  end
+  vim.g.tsgo_completion_boundary_patched = true
+
+  -- tsgo can return property-access text edits that start on the dot.
+  -- Keep builtin completion anchored after the dot so selection does not delete it.
+  vim.lsp.completion._convert_results = function(
+    line,
+    lnum,
+    cursor_col,
+    client_id,
+    client_start_boundary,
+    server_start_boundary,
+    result,
+    encoding
+  )
+    local client = vim.lsp.get_client_by_id(client_id)
+    if
+      client
+      and client.name == 'tsgo'
+      and client_start_boundary > 0
+      and line:sub(client_start_boundary, client_start_boundary) == '.'
+    then
+      server_start_boundary = client_start_boundary
+    end
+
+    return convert_results(
+      line,
+      lnum,
+      cursor_col,
+      client_id,
+      client_start_boundary,
+      server_start_boundary,
+      result,
+      encoding
+    )
+  end
+end
+
+patch_tsgo_completion_boundary()
+
 local servers = {
   -- lua config for neovim taken from https://github.com/neovim/nvim-lspconfig/blob/92ee7d42320edfbb81f3cad851314ab197fa324a/lua/lspconfig/configs/lua_ls.lua#L31
   lua_ls = {
@@ -51,7 +123,10 @@ local servers = {
   rust_analyzer = {},
   clangd = {},
   gopls = {},
-  tsgo = {}
+  tsgo = {
+    capabilities = tsgo_capabilities,
+    on_attach = add_tsgo_keyword_triggers,
+  }
 }
 
 for server, config in pairs(servers) do
