@@ -137,7 +137,7 @@ vim.keymap.set('n', 'gr', fzf.lsp_references, { desc = '[G]o to [r]eferences' })
 
 vim.keymap.set('n', '<leader>q', fzf.lsp_document_diagnostics, { desc = 'Open diagnostic [Q]uickfix list' })
 vim.keymap.set('n', '<leader>ds', fzf.lsp_document_symbols, { desc = '[D]ocument [s]ymbols' })
-vim.keymap.set('n', '<leader>ws', fzf.lsp_workspace_symbols, { desc = '[W]orkspace [s]ymbols' })
+vim.keymap.set('n', '<leader>ws', fzf.lsp_live_workspace_symbols, { desc = '[W]orkspace [s]ymbols' })
 vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, { desc = '[R]e[n]ame' })
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { desc = '[C]ode [A]ction' })
 vim.keymap.set('n', '<leader>oi', function()
