@@ -126,7 +126,8 @@ local servers = {
   tsgo = {
     capabilities = tsgo_capabilities,
     on_attach = add_tsgo_keyword_triggers,
-  }
+  },
+  tofu_ls = {},
 }
 
 for server, config in pairs(servers) do
