@@ -7,6 +7,7 @@ vim.pack.add {
   { src = 'https://github.com/nvim-mini/mini.icons',       version = '520995f1d75da0e4cc901ee95080b1ff2bc46b94' },
   { src = 'https://github.com/lewis6991/gitsigns.nvim',    version = 'v2.1.0' },
   { src = 'https://github.com/folke/which-key.nvim',       version = '3aab2147e74890957785941f0c1ad87d0a44c15a' },
+  { src = 'https://github.com/towolf/vim-helm',            version = '2c8525fd98e57472769d137317bca83e477858ce' },
 }
 
 -- clean up old packages that were removed from vim.pack.add
