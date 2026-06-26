@@ -128,6 +128,7 @@ local servers = {
     on_attach = add_tsgo_keyword_triggers,
   },
   tofu_ls = {},
+  terraformls = {}
 }
 
 for server, config in pairs(servers) do
