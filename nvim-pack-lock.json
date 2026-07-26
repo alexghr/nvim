@@ -1,9 +1,9 @@
 {
   "plugins": {
     "fzf-lua": {
-      "rev": "e3a71496027f2e3c4a60340170c04d66053d5c4c",
+      "rev": "28440c741e927592877514fba3db21eb188caec8",
       "src": "https://github.com/ibhagwan/fzf-lua",
-      "version": "'e3a71496027f2e3c4a60340170c04d66053d5c4c'"
+      "version": "'28440c741e927592877514fba3db21eb188caec8'"
     },
     "gitsigns.nvim": {
       "rev": "a462f416e2ce4744531c6256252dee99a7d34a83",

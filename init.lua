@@ -2,7 +2,7 @@ vim.pack.add {
   { src = 'https://github.com/neovim/nvim-lspconfig',      version = 'v2.9.0' },
   { src = 'https://github.com/stevearc/oil.nvim',          version = 'v2.16.0' },
   { src = 'https://github.com/tpope/vim-fugitive',         version = '3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0' },
-  { src = 'https://github.com/ibhagwan/fzf-lua',           version = 'e3a71496027f2e3c4a60340170c04d66053d5c4c' },
+  { src = 'https://github.com/ibhagwan/fzf-lua',           version = '28440c741e927592877514fba3db21eb188caec8' },
   { src = 'https://github.com/loctvl842/monokai-pro.nvim', version = 'v2.1.4' },
   { src = 'https://github.com/nvim-mini/mini.icons',       version = '520995f1d75da0e4cc901ee95080b1ff2bc46b94' },
   { src = 'https://github.com/lewis6991/gitsigns.nvim',    version = 'v2.1.0' },
