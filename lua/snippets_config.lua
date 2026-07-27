@@ -14,6 +14,12 @@ M.items = {
     name = 'if err != nil',
     body = 'if err != nil {\n\t${1:return err}\n}\n$0',
   },
+  {
+    filetypes = { 'rust' },
+    trig = 'drv',
+    name = 'derive common traits',
+    body = '#[derive(Debug, Copy, Clone, PartialEq, Eq)]',
+  },
 }
 
 ---@param ft string
