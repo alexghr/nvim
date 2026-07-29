@@ -36,21 +36,21 @@ local function patch_tsgo_completion_boundary()
   -- tsgo can return property-access text edits that start on the dot.
   -- Keep builtin completion anchored after the dot so selection does not delete it.
   vim.lsp.completion._convert_results = function(
-    line,
-    lnum,
-    cursor_col,
-    client_id,
-    client_start_boundary,
-    server_start_boundary,
-    result,
-    encoding
+      line,
+      lnum,
+      cursor_col,
+      client_id,
+      client_start_boundary,
+      server_start_boundary,
+      result,
+      encoding
   )
     local client = vim.lsp.get_client_by_id(client_id)
     if
-      client
-      and client.name == 'tsgo'
-      and client_start_boundary > 0
-      and line:sub(client_start_boundary, client_start_boundary) == '.'
+        client
+        and client.name == 'tsgo'
+        and client_start_boundary > 0
+        and line:sub(client_start_boundary, client_start_boundary) == '.'
     then
       server_start_boundary = client_start_boundary
     end
@@ -76,7 +76,7 @@ local servers = {
     on_init = function(client)
       if client.workspace_folders then
         local path = client.workspace_folders[1].name
-        if path ~= vim.fn.stdpath('config') and (vim.uv.fs_stat(path..'/.luarc.json') or vim.uv.fs_stat(path..'/.luarc.jsonc')) then
+        if path ~= vim.fn.stdpath('config') and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
           return
         end
       end
@@ -108,6 +108,7 @@ local servers = {
 
   helm_ls = {},
   yamlls = {
+    filetypes = { 'yaml', 'yaml.docker-compose', 'yaml.gitlab', 'yaml.helm-values' },
     settings = {
       redhat = { telemetry = { enabled = false } },
       yaml = {
