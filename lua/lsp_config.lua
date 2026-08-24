@@ -129,7 +129,18 @@ local servers = {
     on_attach = add_tsgo_keyword_triggers,
   },
   tofu_ls = {},
-  terraformls = {}
+  terraformls = {},
+
+  -- cargo install this guy: https://github.com/asyncswap/solidity-language-server
+  solidity_language_server = {
+    cmd = { 'solidity-language-server', '--stdio' },
+    filetypes = { 'solidity' },
+    root_markers = {
+      '.git',
+      'foundry.toml',
+      'package.json',
+    }
+  },
 }
 
 for server, config in pairs(servers) do
