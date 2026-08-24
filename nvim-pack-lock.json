@@ -30,6 +30,11 @@
       "src": "https://github.com/stevearc/oil.nvim",
       "version": "'v2.16.0'"
     },
+    "orgmode": {
+      "rev": "359538284a21c1edac20cb8a0b6b772ca098098e",
+      "src": "https://github.com/nvim-orgmode/orgmode",
+      "version": "'0.7.5'"
+    },
     "vim-fugitive": {
       "rev": "61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4",
       "src": "https://github.com/tpope/vim-fugitive",

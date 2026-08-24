@@ -8,6 +8,7 @@ vim.pack.add {
   { src = 'https://github.com/lewis6991/gitsigns.nvim',    version = 'v2.1.0' },
   { src = 'https://github.com/folke/which-key.nvim',       version = '3aab2147e74890957785941f0c1ad87d0a44c15a' },
   { src = 'https://github.com/towolf/vim-helm',            version = '2c8525fd98e57472769d137317bca83e477858ce' },
+  { src = 'https://github.com/nvim-orgmode/orgmode',       version = '0.7.5' },
 }
 
 -- clean up old packages that were removed from vim.pack.add
@@ -109,6 +110,12 @@ require('which-key').setup({
 
 require('filetype_config')
 require('lsp_config')
+
+require('orgmode').setup({
+  org_agenda_files = '~/orgfiles/**/*',
+  org_default_notes_file = '~/orgfiles/refile.org',
+})
+vim.lsp.enable('org')
 
 vim.keymap.set('n', '-', ':Oil<CR>', { desc = 'Open parent directory' })
 
