@@ -136,9 +136,9 @@ local servers = {
     cmd = { 'solidity-language-server', '--stdio' },
     filetypes = { 'solidity' },
     root_markers = {
-      '.git',
       'foundry.toml',
       'package.json',
+      '.git',
     }
   },
 }

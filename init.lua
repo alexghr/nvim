@@ -119,7 +119,37 @@ vim.lsp.enable('org')
 
 vim.keymap.set('n', '-', ':Oil<CR>', { desc = 'Open parent directory' })
 
-vim.keymap.set('n', '<leader>f', vim.lsp.buf.format, { desc = '[F]ormat buffer' })
+local function format_buffer()
+  if vim.bo.filetype ~= 'solidity' then
+    vim.lsp.buf.format()
+    return
+  end
+
+  local root = vim.fs.root(0, 'foundry.toml')
+  if not root then
+    vim.notify('No foundry.toml found for Solidity buffer', vim.log.levels.ERROR)
+    return
+  end
+
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local result = vim.system(
+    { 'forge', 'fmt', '--root', root, '--raw', '-' },
+    { stdin = table.concat(lines, '\n') .. '\n', text = true }
+  ):wait()
+
+  if result.code ~= 0 then
+    vim.notify(result.stderr or 'forge fmt failed', vim.log.levels.ERROR)
+    return
+  end
+
+  local formatted = vim.split(result.stdout, '\n', { plain = true })
+  if formatted[#formatted] == '' then
+    table.remove(formatted)
+  end
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, formatted)
+end
+
+vim.keymap.set('n', '<leader>f', format_buffer, { desc = '[F]ormat buffer' })
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
