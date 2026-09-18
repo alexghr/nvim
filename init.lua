@@ -113,7 +113,21 @@ require('lsp_config')
 
 require('orgmode').setup({
   org_agenda_files = '~/orgfiles/**/*',
-  org_default_notes_file = '~/orgfiles/refile.org',
+  org_default_notes_file = '~/orgfiles/inbox.org',
+  org_adapt_indentation = false,
+  org_blank_before_new_entry = {
+    heading = false,
+    plain_list_item = false,
+  },
+  org_cycle_separator_lines = 1,
+  org_todo_keywords = {
+    'TODO(t)',
+    'NEXT(n)',
+    'WAITING(w)',
+    '|',
+    'DONE(d)',
+    'CANCELLED(c)',
+  },
 })
 vim.lsp.enable('org')
 
@@ -184,6 +198,13 @@ vim.keymap.set('n', '<leader>oi', function()
     apply = true,
   })
 end, { desc = '[O]rganize [I]mports' })
+
+vim.keymap.set('n', '<leader>of', function()
+  require('fzf-lua').files({
+    cwd = vim.fn.expand('~/orgfiles'),
+    prompt = 'Org files> ',
+  })
+end, { desc = '[O]rg [f]iles' })
 
 -- Enable LSP complete
 vim.api.nvim_create_autocmd('LspAttach', {
