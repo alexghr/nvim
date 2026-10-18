@@ -130,6 +130,7 @@ local servers = {
   },
   tofu_ls = {},
   terraformls = {},
+  html = {},
 
   -- cargo install this guy: https://github.com/asyncswap/solidity-language-server
   solidity_language_server = {
