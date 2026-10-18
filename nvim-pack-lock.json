@@ -1,5 +1,10 @@
 {
   "plugins": {
+    "emoji.nvim": {
+      "rev": "38be4f62179d58e90ac7abc11b8a59b052da8eb0",
+      "src": "https://github.com/Allaman/emoji.nvim",
+      "version": "'6.2.0'"
+    },
     "fzf-lua": {
       "rev": "28440c741e927592877514fba3db21eb188caec8",
       "src": "https://github.com/ibhagwan/fzf-lua",

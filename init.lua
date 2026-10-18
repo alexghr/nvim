@@ -9,6 +9,7 @@ vim.pack.add {
   { src = 'https://github.com/folke/which-key.nvim',       version = '3aab2147e74890957785941f0c1ad87d0a44c15a' },
   { src = 'https://github.com/towolf/vim-helm',            version = '2c8525fd98e57472769d137317bca83e477858ce' },
   { src = 'https://github.com/nvim-orgmode/orgmode',       version = '0.7.5' },
+  { src = 'https://github.com/Allaman/emoji.nvim',         version = '6.2.0' },
 }
 
 -- clean up old packages that were removed from vim.pack.add
@@ -130,6 +131,14 @@ require('orgmode').setup({
   },
 })
 vim.lsp.enable('org')
+
+local emoji = require('emoji')
+emoji.setup({
+  plugin_path = vim.fn.stdpath('data') .. '/site/pack/core/opt'
+})
+
+vim.keymap.set('n', '<leader>j', emoji.insert)
+vim.keymap.set('i', '<C-j>', emoji.insert)
 
 vim.keymap.set('n', '-', ':Oil<CR>', { desc = 'Open parent directory' })
 
