@@ -10,6 +10,7 @@ vim.pack.add {
   { src = 'https://github.com/towolf/vim-helm',            version = '2c8525fd98e57472769d137317bca83e477858ce' },
   { src = 'https://github.com/nvim-orgmode/orgmode',       version = '0.7.5' },
   { src = 'https://github.com/Allaman/emoji.nvim',         version = '6.2.0' },
+  { src = 'https://github.com/noir-lang/noir-nvim',        version = 'd78fe4339b9f66ad02a1a59c7281c198deb8a64a' },
 }
 
 -- clean up old packages that were removed from vim.pack.add

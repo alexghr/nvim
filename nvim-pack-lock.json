@@ -25,6 +25,11 @@
       "src": "https://github.com/loctvl842/monokai-pro.nvim",
       "version": "'v2.1.4'"
     },
+    "noir-nvim": {
+      "rev": "d78fe4339b9f66ad02a1a59c7281c198deb8a64a",
+      "src": "https://github.com/noir-lang/noir-nvim",
+      "version": "'d78fe4339b9f66ad02a1a59c7281c198deb8a64a'"
+    },
     "nvim-lspconfig": {
       "rev": "ac04ec3c2af08e9821b4eb64ede86072b9b213bf",
       "src": "https://github.com/neovim/nvim-lspconfig",
